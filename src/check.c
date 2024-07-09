@@ -6,13 +6,13 @@
 /*   By: trgaspar <trgaspar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 15:31:08 by trgaspar          #+#    #+#             */
-/*   Updated: 2024/07/01 17:10:07 by trgaspar         ###   ########.fr       */
+/*   Updated: 2024/07/09 06:00:10 by trgaspar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-char	*check_cmd(t_pipex *pipex, char *cmd)
+char	*check_cmd(t_pipex *pipex)
 {
 	char	*tmp;
 	char	*path;
@@ -22,78 +22,62 @@ char	*check_cmd(t_pipex *pipex, char *cmd)
 	while (pipex->splited_path[i])
 	{
 		tmp = ft_strjoin(pipex->splited_path[i], "/");
-		path = ft_strjoin(tmp, cmd);
+		path = ft_strjoin(tmp, pipex->split_cmd[0]);
 		free(tmp);
 		if (access(path, 0) == 0)
 			return (path);
 		free(path);
 		i++;
 	}
-	if (access(cmd, 0) == 0)
-		return (cmd);
+	if (access(pipex->split_cmd[0], 0) == 0)
+		return (pipex->split_cmd[0]);
 	return (NULL);
 }
 
-void	exec(t_pipex *pipex, char **cmd, char **envp, int argc)
+void	exec(t_pipex *pipex, char **envp, int argc, char **argv)
 {
-	pid_t	pid;
 	char	*str;
 
 	if (pipe(pipex->pipefd) == -1)
 		perror("pipe");
-	pid = fork();
-	if (pid == -1)
+	pipex->pid = fork();
+	if (pipex->pid == -1)
 		perror("fork");
-	str = check_cmd(pipex, cmd[pipex->index - 2]);
-	if (pid == 0)
+	pipex->split_cmd = ft_split(argv[2 + pipex->index], ' ');
+	// for(int j = 0; pipex->split_cmd[j]; j++)
+	// 	printf("%s\n", pipex->split_cmd[j]);
+	str = check_cmd(pipex);
+	if (pipex->pid == 0)
 	{
-		setup_pid(pipex, cmd, argc);
-		child(pipex, argc);
-		if (execve(str, cmd, envp) == -1)
+		if (child(pipex, argc) == -1)
+			free_all(pipex);
+		if (execve(str, pipex->split_cmd, envp) == -1)
 		{
-			write(2, "Execve a echoue", 16);
+			write(2, "Execve a echoue\n", 17);
 			free_all(pipex);
 		}
 	}
-	else
-	{
-		close(pipex->pipefd[1]);
-		dup2(pipex->pipefd[0], STDIN_FILENO);
-	}
+	free_all2(pipex->split_cmd, 0);
 	free(str);
+	wait(0);
 }
 
 int	child(t_pipex *pipex, int argc)
 {
-	if (pipex->index == 2)
+	if (close(pipex->pipefd[0]) == -1)
+		return (close(pipex->pipefd[1]), -1);
+	if (pipex->index == 0)
+		if (dup2(pipex->infile, STDIN_FILENO) == -1)
+			return (close(pipex->pipefd[1]), -1);
+	if (pipex->index == argc - 4)
 	{
-		close(pipex->pipefd[0]);
-		dup2(pipex->pipefd[1], STDOUT_FILENO);
-	}
-	else if (pipex->index == argc - 2)
-	{
-		close(pipex->pipefd[0]);
-		dup2(pipex->outfile, STDOUT_FILENO);
+		if (dup2(pipex->outfile, STDOUT_FILENO) == -1)
+			return (close(pipex->pipefd[1]), -1);
 	}
 	else
 	{
-		close(pipex->pipefd[0]);
-		dup2(pipex->pipefd[1], STDOUT_FILENO);
+		if (dup2(pipex->pipefd[1], STDOUT_FILENO) == -1)
+			return (close(pipex->pipefd[1]), -1);
 	}
 	return (0);
-}
-
-void	setup_pid(t_pipex *pipex, char **cmd, int argc)
-{
-	if (pipex->index == 2)
-	{
-		cmd[1] = pipex->file;
-		cmd[2] = NULL;
-	}
-	if (pipex->index != 2)
-	{
-		cmd[0] = cmd[pipex->index - 2];
-		cmd[1] = 0;
-	}
-	child(pipex, argc);
 }

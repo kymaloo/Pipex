@@ -28,22 +28,24 @@ typedef struct s_pipex
 	char	*file;
 	char	**splited_path;
 	char	**cmd;
+	char	**split_cmd;
 	int		infile;
 	int		outfile;
 	int		number_command;
 	int		index;
 	int		pipefd[2];
+	pid_t	pid;
+	t_list	*lst;
 }					t_pipex;
 
 void	stock_command_pipe(t_pipex *pipex, int argc, char **argv);
 int		get_path_command(t_pipex *pipex, char **envp);
 void	get_command(t_pipex *pipex);
 int		init_cmd(t_pipex *pipex, int argc, char *argv[], char *envp[]);
-void	exec(t_pipex *pipex, char **cmd, char **envp, int argc);
+void	exec(t_pipex *pipex, char **envp, int argc, char **argv);
 void	free_all(t_pipex *pipex);
-char	*check_cmd(t_pipex *pipex, char *cmd);
+char	*check_cmd(t_pipex *pipex);
 int		child(t_pipex *pipex, int argc);
 void	free_all2(char **tab, int i);
-void	setup_pid(t_pipex *pipex, char **cmd, int argc);
 
 #endif
