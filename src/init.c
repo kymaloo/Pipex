@@ -6,7 +6,7 @@
 /*   By: trgaspar <trgaspar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 16:24:48 by trgaspar          #+#    #+#             */
-/*   Updated: 2024/07/08 12:47:56 by trgaspar         ###   ########.fr       */
+/*   Updated: 2024/07/11 13:46:43 by trgaspar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,23 +99,5 @@ void	free_all2(char **tab, int i)
 		i++;
 	}
 	free(tab);
+	tab = NULL;
 }
-
-
-
-// argc = {"cat", "ls -la"};
-
-// t_pipex->cmd char **;
-
-// if (splittable)
-// 	t_pipex->cmd = split(argv[i]);
-
-// execute()
-// {
-// 	while(t_pipex)
-// 	{
-// 		fork();
-// 		pipe();
-// 			execve(path, t_pipex->cmd, env);
-// 	}
-// }

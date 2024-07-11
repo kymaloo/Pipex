@@ -25,7 +25,7 @@ int	main(int argc, char *argv[], char *envp[])
 	if (init_cmd(pipex, argc, argv, envp) != 0)
 		free_all(pipex);
 	i = 0;
-	pipex->index = 0;
+	pipex->index = 2;
 	while (i != pipex->number_command)
 	{
 		exec(pipex, envp, argc, argv);

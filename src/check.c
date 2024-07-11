@@ -6,7 +6,7 @@
 /*   By: trgaspar <trgaspar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 15:31:08 by trgaspar          #+#    #+#             */
-/*   Updated: 2024/07/09 06:00:10 by trgaspar         ###   ########.fr       */
+/*   Updated: 2024/07/11 18:57:22 by trgaspar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,9 @@ void	exec(t_pipex *pipex, char **envp, int argc, char **argv)
 	pipex->pid = fork();
 	if (pipex->pid == -1)
 		perror("fork");
-	pipex->split_cmd = ft_split(argv[2 + pipex->index], ' ');
-	// for(int j = 0; pipex->split_cmd[j]; j++)
-	// 	printf("%s\n", pipex->split_cmd[j]);
+	pipex->split_cmd = ft_split(argv[0 + pipex->index], ' ');
+	for(int j = 0; pipex->split_cmd[j]; j++)
+		printf("%s\n", pipex->split_cmd[j]);
 	str = check_cmd(pipex);
 	if (pipex->pid == 0)
 	{
@@ -59,6 +59,8 @@ void	exec(t_pipex *pipex, char **envp, int argc, char **argv)
 	}
 	free_all2(pipex->split_cmd, 0);
 	free(str);
+	close(pipex->pipefd[0]);
+	close(pipex->pipefd[1]);
 	wait(0);
 }
 
@@ -66,18 +68,30 @@ int	child(t_pipex *pipex, int argc)
 {
 	if (close(pipex->pipefd[0]) == -1)
 		return (close(pipex->pipefd[1]), -1);
-	if (pipex->index == 0)
+	if (pipex->index == 2)
+	{
+		puts("1");
 		if (dup2(pipex->infile, STDIN_FILENO) == -1)
 			return (close(pipex->pipefd[1]), -1);
-	if (pipex->index == argc - 4)
+		close(pipex->pipefd[1]);
+	}
+	if (pipex->index == argc - 2)
 	{
+		puts("2");
 		if (dup2(pipex->outfile, STDOUT_FILENO) == -1)
+		{
+			puts("test");
 			return (close(pipex->pipefd[1]), -1);
+		}
+		ft_putstr_fd("machin", 2);
+		close(pipex->pipefd[1]);
 	}
 	else
 	{
+		puts("3");
 		if (dup2(pipex->pipefd[1], STDOUT_FILENO) == -1)
 			return (close(pipex->pipefd[1]), -1);
+		close(pipex->pipefd[1]);
 	}
 	return (0);
 }
