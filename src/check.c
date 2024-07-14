@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: trgaspar <trgaspar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trgaspar <trgaspar@student.42mulhouse.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 15:31:08 by trgaspar          #+#    #+#             */
-/*   Updated: 2024/07/11 18:57:22 by trgaspar         ###   ########.fr       */
+/*   Updated: 2024/07/14 18:13:58 by trgaspar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,38 +34,19 @@ char	*check_cmd(t_pipex *pipex)
 	return (NULL);
 }
 
-void	exec(t_pipex *pipex, char **envp, int argc, char **argv)
+void	exec(t_pipex *pipex, char **argv, char **envp)
 {
-	char	*str;
-
-	if (pipe(pipex->pipefd) == -1)
-		perror("pipe");
-	pipex->pid = fork();
-	if (pipex->pid == -1)
-		perror("fork");
-	pipex->split_cmd = ft_split(argv[0 + pipex->index], ' ');
-	for(int j = 0; pipex->split_cmd[j]; j++)
-		printf("%s\n", pipex->split_cmd[j]);
+	pipex->split_cmd = ft_split(argv[pipex->index], ' ');
 	str = check_cmd(pipex);
-	if (pipex->pid == 0)
+	if (str == NULL)
 	{
-		if (child(pipex, argc) == -1)
-			free_all(pipex);
-		if (execve(str, pipex->split_cmd, envp) == -1)
-		{
-			write(2, "Execve a echoue\n", 17);
-			free_all(pipex);
-		}
+		error("command not found : ", 2);
+		error(pipex->args[0], 2);
+		error("\n", 2);
+		free_child(pipex);
 	}
-	else
-	{
-		if ((close(pipex->pipefd[1]) == -1 || \
-			dup2(pipex->pipefd[0], 0) == -1 || close(pipex->pipefd[0]) == -1))
-				return ;
-	}
-	free_all2(pipex->split_cmd, 0);
-	free(str);
-	wait(0);
+	else if (execve(str, pipex->split_cmd, envp) == -1)
+		perror("execve error.");
 }
 
 int	child(t_pipex *pipex, int argc)
