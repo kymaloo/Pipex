@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   free.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: trgaspar <trgaspar@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/14 22:34:28 by trgaspar          #+#    #+#             */
+/*   Updated: 2024/07/14 22:34:28 by trgaspar         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "pipex.h"
 
 void	fork_free(t_pipex *pipex)
@@ -25,11 +37,11 @@ void	free_child(t_pipex *pipex)
 	int	i;
 
 	i = 0;
-	while (pipex->args[i])
+	while (pipex->splited_path[i])
 	{
-		if (pipex->args[i])
-			free(pipex->args[i]);
+		if (pipex->splited_path[i])
+			free(pipex->splited_path[i]);
 		i++;
 	}
-	free(pipex->args);
+	free(pipex->splited_path);
 }

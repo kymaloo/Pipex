@@ -15,7 +15,6 @@
 int	main(int argc, char *argv[], char *envp[])
 {
 	t_pipex	*pipex;
-	int		i;
 
 	if (envp == NULL)
 		return (EXIT_FAILURE);
@@ -26,8 +25,8 @@ int	main(int argc, char *argv[], char *envp[])
 		free_all(pipex);
 	if (init_cmd(pipex, argc, argv, envp) != 0)
 		free_all(pipex);
-	pipex(p, argc, argv, env);
-	free_all(pipex);
+	ft_pipex(pipex, argc, argv, envp);
+	fork_free(pipex);
 	return (EXIT_SUCCESS);
 }
 
@@ -46,28 +45,28 @@ void	free_all(t_pipex *pipex)
 	exit(1);
 }
 
-void	pipex(t_pipex pipex, int argc, char **argv, char **env)
+void	ft_pipex(t_pipex *pipex, int argc, char **argv, char **envp)
 {
 	pipex->index = 2;
 	while (pipex->index <= argc - 2)
 	{
-		if (pipe(pipex->tube) < 0)
+		if (pipe(pipex->pipefd) < 0)
 			perror("pipe");
 		pipex->pid = fork();
 		if (pipex->pid == -1)
 			return ;
 		if (pipex->pid == 0)
 		{
-			if (child(p, argc) == -1)
+			if (child(pipex, argc) == -1)
 				return ;
-			execute_command(p, argv, env);
-			fork_free(p);
+			exec(pipex, argv, envp);
+			fork_free(pipex);
 			exit(1);
 		}
 		else
 		{
-			if ((close(pipex->tube[1]) == -1 || \
-			dup2(pipex->tube[0], 0) == -1 || close(pipex->tube[0]) == -1))
+			if ((close(pipex->pipefd[1]) == -1 || \
+			dup2(pipex->pipefd[0], 0) == -1 || close(pipex->pipefd[0]) == -1))
 				return ;
 		}
 		pipex->index++;

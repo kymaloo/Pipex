@@ -6,7 +6,8 @@ HEADERS	:= -Iinclude
 
 SRCS	:= 	src/main.c \
 			src/init.c \
-			src/check.c
+			src/check.c \
+			src/free.c
 
 OBJS	:= ${SRCS:.c=.o}
 

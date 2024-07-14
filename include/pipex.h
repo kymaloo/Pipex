@@ -42,10 +42,14 @@ void	stock_command_pipe(t_pipex *pipex, int argc, char **argv);
 int		get_path_command(t_pipex *pipex, char **envp);
 void	get_command(t_pipex *pipex);
 int		init_cmd(t_pipex *pipex, int argc, char *argv[], char *envp[]);
-void	exec(t_pipex *pipex, char **envp, int argc, char **argv);
+void	exec(t_pipex *pipex, char **argv, char **envp);
 void	free_all(t_pipex *pipex);
 char	*check_cmd(t_pipex *pipex);
 int		child(t_pipex *pipex, int argc);
 void	free_all2(char **tab, int i);
+void	ft_pipex(t_pipex *pipex, int argc, char **argv, char **envp);
+void	fork_free(t_pipex *pipex);
+void	free_child(t_pipex *pipex);
+void	error(char *msg, int id);
 
 #endif
