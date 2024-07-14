@@ -6,7 +6,7 @@
 /*   By: trgaspar <trgaspar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 10:05:59 by trgaspar          #+#    #+#             */
-/*   Updated: 2024/07/01 16:37:05 by trgaspar         ###   ########.fr       */
+/*   Updated: 2024/07/14 23:49:15 by trgaspar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,11 @@ static int	ft_count_word(char const *str, char c)
 
 char	**ft_free_all(char **tab, int i)
 {
-	while (tab[--i] && i >= 0)
+	while (tab[i] != NULL)
+	{
 		free(tab[i]);
+		i++;
+	}
 	free(tab);
 	return (NULL);
 }
