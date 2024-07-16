@@ -24,11 +24,7 @@ int	get_path_command(t_pipex *pipex, char **envp)
 		pipex->path_cmd = ft_substr(envp[i], 5, ft_strlen(envp[i]));
 	}
 	if (envp[i] == NULL)
-	{
-		close(pipex->outfile);
-		close(pipex->infile);
 		return (EXIT_FAILURE);
-	}
 	return (EXIT_SUCCESS);
 }
 
