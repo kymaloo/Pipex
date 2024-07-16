@@ -6,7 +6,7 @@
 /*   By: trgaspar <trgaspar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 16:24:48 by trgaspar          #+#    #+#             */
-/*   Updated: 2024/07/14 23:32:08 by trgaspar         ###   ########.fr       */
+/*   Updated: 2024/07/16 21:46:36 by trgaspar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,15 +29,6 @@ int	get_path_command(t_pipex *pipex, char **envp)
 		close(pipex->infile);
 		return (EXIT_FAILURE);
 	}
-	// pipex->splited_path = ft_split(pipex->path_cmd, ':');
-	// if (pipex->splited_path == NULL)
-	// {
-	// 	free(pipex->path_cmd);
-	// 	return (EXIT_FAILURE);
-	// }
-	
-	// free(pipex->path_cmd);
-	// pipex->path_cmd = NULL;
 	return (EXIT_SUCCESS);
 }
 

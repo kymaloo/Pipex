@@ -6,7 +6,7 @@
 /*   By: trgaspar <trgaspar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 15:31:08 by trgaspar          #+#    #+#             */
-/*   Updated: 2024/07/15 00:01:06 by trgaspar         ###   ########.fr       */
+/*   Updated: 2024/07/16 21:44:56 by trgaspar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ char	*check_cmd(t_pipex pipex)
 	int		i;
 
 	i = 0;
+	if (pipex.split_cmd[0] == NULL)
+		return (NULL);
 	while (pipex.splited_path[i])
 	{
 		tmp = ft_strjoin(pipex.splited_path[i], "/");
@@ -43,7 +45,10 @@ void	exec(t_pipex pipex, char **argv, char **envp)
 	if (str == NULL)
 	{
 		error("command not found : ", 2);
-		error(pipex.split_cmd[0], 2);
+		if (pipex.split_cmd[0] != NULL)
+			error(pipex.split_cmd[0], 2);
+		else
+			error("\"\"", 2);
 		error("\n", 2);
 		ft_free_all(pipex.split_cmd, 0);
 		free_child(pipex);
