@@ -30,7 +30,6 @@ typedef struct s_pipex
 	char	**split_cmd;
 	int		infile;
 	int		outfile;
-	int		number_command;
 	int		index;
 	int		pipefd[2];
 	pid_t	pid;
@@ -47,5 +46,6 @@ void	ft_pipex(t_pipex pipex, int argc, char **argv, char **envp);
 void	fork_free(t_pipex pipex);
 void	free_child(t_pipex pipex);
 void	error(char *msg, int id);
+void	free_all(t_pipex pipex, char *er, int ex);
 
 #endif

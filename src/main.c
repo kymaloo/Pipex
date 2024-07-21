@@ -18,14 +18,13 @@ int	main(int argc, char *argv[], char *envp[])
 
 	ft_memset(&pipex, 0, sizeof(pipex));
 	if (envp == NULL)
-		return (EXIT_FAILURE);
+		free_all(pipex, "Error: envp is void", 1);
 	if (argc < 5)
-		return (ft_putstr_fd("Error: You don't have enough arguments: ", 1), 1);
+		free_all(pipex, "Error: You don't have enough arguments", 1);
 	if (init_cmd(&pipex, argc, argv, envp) != 0)
-		return (1);
+		free_all(pipex, "Error: Init failed", 1);
 	ft_pipex(pipex, argc, argv, envp);
-	pipex.pid = -9;
-	fork_free(pipex);
+	free_all(pipex, NULL, 0);
 	return (EXIT_SUCCESS);
 }
 

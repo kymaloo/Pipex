@@ -45,3 +45,18 @@ void	free_child(t_pipex pipex)
 	}
 	free(pipex.splited_path);
 }
+
+void	free_all(t_pipex pipex, char *er, int ex)
+{
+	if (ex == EXIT_SUCCESS)
+	{
+		fork_free(pipex);
+		exit(ex);
+	}
+	else
+	{
+		fork_free(pipex);
+		error(er, 2);
+		exit(ex);
+	}
+}

@@ -28,6 +28,7 @@ $(NAME): $(OBJS)
 
 clean:
 	@rm -rf $(OBJS)
+	@$(MAKE) clean -C  $(LIBFT)
 
 fclean: clean
 	@rm -rf $(NAME)

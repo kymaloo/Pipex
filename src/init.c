@@ -6,7 +6,7 @@
 /*   By: trgaspar <trgaspar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 16:24:48 by trgaspar          #+#    #+#             */
-/*   Updated: 2024/07/16 21:46:36 by trgaspar         ###   ########.fr       */
+/*   Updated: 2024/07/21 13:04:13 by trgaspar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,14 +44,14 @@ int	get_command(t_pipex *pipex)
 int	init_cmd(t_pipex *pipex, int argc, char *argv[], char *envp[])
 {
 	if (get_path_command(pipex, envp) != 0)
-		return (EXIT_FAILURE);
+		free_all(*pipex, "Error: No path found", 1);
 	if (get_command(pipex) != 0)
-		return (EXIT_FAILURE);
+		free_all(*pipex, "Error: Command no split", 1);
 	pipex->infile = open(argv[1], O_RDONLY);
 	if (pipex->infile == -1)
-		return (EXIT_FAILURE);
+		free_all(*pipex, "Error: infile isn't open", 1);
 	pipex->outfile = open(argv[argc - 1], O_TRUNC | O_CREAT | O_WRONLY, 0644);
 	if (pipex->outfile == -1)
-		return (EXIT_FAILURE);
+		free_all(*pipex, "Error: outfile isn't open", 1);
 	return (EXIT_SUCCESS);
 }
